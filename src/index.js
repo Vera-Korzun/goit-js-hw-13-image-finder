@@ -4,6 +4,12 @@ import fetchImg from './js/fetchImg';
 import debounce from 'lodash.debounce';
 import {createMarkup} from './js/createMarkup';
 
+const {error} = require('@pnotify/core');
+import '../node_modules/@pnotify/core/dist/PNotify.css'
+import '../node_modules/@pnotify/core/dist/Angeler.css'
+import '../node_modules/@pnotify/core/dist/BrightTheme.css'
+import '../node_modules/@pnotify/core/dist/Material.css'
+
 const API_KEY = '19534909-4566fefb162e8faacd9cf503d';
 let page = 1;
 
@@ -18,14 +24,17 @@ const loadImages = (query) => {
 };
 
 const getForm = (event) => {
-    if (event.target.value === '') {
+    event.preventDefault();
+    console.log(event);
+    if (refs.input.value === '') {
         refs.galleryList.innerHTML = '';
         refs.btnLoad.style.display = "none";
     } else {
         page = 1;
-       loadImages(event.target.value);
+        refs.galleryList.innerHTML = '';
+       loadImages(refs.input.value);
     }
-    
+    return false;
 }
 
 const loadMore = () => {
@@ -37,15 +46,28 @@ const loadMore = () => {
             behavior: 'smooth',
           })
           )
+        .catch(error => console.log(error))
        
     }
 }
 
-refs.input.addEventListener('input', debounce(getForm, 500));
+const runScript = (event) => {
+    event.preventDefault();
+    
+    console.log(event);
+    return false;
+}
 
+//refs.input.addEventListener('input', debounce(getForm, 500));
+refs.form.addEventListener('submit', getForm);
 refs.btnLoad.addEventListener('click', loadMore);
 
-
+// const myError = error({
+//           text: "Сountry not found. Please, try to enter again.",
+//           maxTextHeight: null,
+//           delay: 3000,
+//           type: 'error'
+//         });
 
 
 
